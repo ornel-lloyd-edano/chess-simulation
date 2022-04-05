@@ -33,6 +33,10 @@ abstract class ChessPiece(val `type`: ChessPiece.ChessPieceType, val color: Ches
    * @return a new chess piece with the same properties as the old one except a new tile location
    */
   def clone(tile: Tile): ChessPiece
+
+  override def toString: String = {
+    s"${color.toString} ${`type`.toString}"
+  }
 }
 
 object ChessPiece {

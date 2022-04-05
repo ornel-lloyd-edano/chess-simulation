@@ -9,10 +9,6 @@ import scala.util.{Failure, Success, Try}
 
 class Board(state: State) {
 
-  //a snapshot of the current state before any King makes a move
-  //if the King is check mated after its own move, current state is rolled back to previous state
-  private var previousState = new State(state.state)
-
   def get(tile: Tile):Option[ChessPiece] = state.tiles.get(tile)
 
   def get(chessPiece: ChessPiece):Option[Tile] = state.chessPieces.get(chessPiece)
@@ -152,39 +148,39 @@ object Board {
 
   object State {
     private val tiles = Map[Tile, ChessPiece](
-      Tile("a1") -> new Rook(1, Color.White, Tile("a1")),
-      Tile("b1") -> new Knight(1, Color.White, Tile("b1")),
-      Tile("c1") -> new Bishop(1, Color.White, Tile("c1")),
-      Tile("d1") -> new Queen( Color.White, Tile("d1")),
-      Tile("e1") -> new King( Color.White, Tile("e1")),
-      Tile("f1") -> new Bishop(2, Color.White, Tile("f1")),
-      Tile("g1") -> new Knight(2, Color.White, Tile("g1")),
-      Tile("h1") -> new Rook(2, Color.White, Tile("h1")),
-      Tile("a2") -> new Pawn(1, Color.White, Tile("a2")),
-      Tile("b2") -> new Pawn(2, Color.White, Tile("b2")),
-      Tile("c2") -> new Pawn(3, Color.White, Tile("c2")),
-      Tile("d2") -> new Pawn(4, Color.White, Tile("d2")),
-      Tile("e2") -> new Pawn(5, Color.White, Tile("e2")),
-      Tile("f2") -> new Pawn(6, Color.White, Tile("f2")),
-      Tile("g2") -> new Pawn(7, Color.White, Tile("g2")),
-      Tile("h2") -> new Pawn(8, Color.White, Tile("h2")),
+      Tile("a1") ->  Rook(1, Color.White, Tile("a1")),
+      Tile("b1") ->  Knight(1, Color.White, Tile("b1")),
+      Tile("c1") ->  Bishop(1, Color.White, Tile("c1")),
+      Tile("d1") ->  Queen( Color.White, Tile("d1")),
+      Tile("e1") ->  King( Color.White, Tile("e1")),
+      Tile("f1") ->  Bishop(2, Color.White, Tile("f1")),
+      Tile("g1") ->  Knight(2, Color.White, Tile("g1")),
+      Tile("h1") ->  Rook(2, Color.White, Tile("h1")),
+      Tile("a2") ->  Pawn(1, Color.White, Tile("a2")),
+      Tile("b2") ->  Pawn(2, Color.White, Tile("b2")),
+      Tile("c2") ->  Pawn(3, Color.White, Tile("c2")),
+      Tile("d2") ->  Pawn(4, Color.White, Tile("d2")),
+      Tile("e2") ->  Pawn(5, Color.White, Tile("e2")),
+      Tile("f2") ->  Pawn(6, Color.White, Tile("f2")),
+      Tile("g2") ->  Pawn(7, Color.White, Tile("g2")),
+      Tile("h2") ->  Pawn(8, Color.White, Tile("h2")),
 
-      Tile("a8") -> new Rook(1, Color.Black, Tile("a8")),
-      Tile("b8") -> new Knight(1, Color.Black, Tile("b8")),
-      Tile("c8") -> new Bishop(1, Color.Black, Tile("c8")),
-      Tile("d8") -> new Queen( Color.Black, Tile("d8")),
-      Tile("e8") -> new King( Color.Black, Tile("e8")),
-      Tile("f8") -> new Bishop(2, Color.Black, Tile("f8")),
-      Tile("g8") -> new Knight(2, Color.Black, Tile("g8")),
-      Tile("h8") -> new Rook(2, Color.Black, Tile("h8")),
-      Tile("a7") -> new Pawn(1, Color.Black, Tile("a7")),
-      Tile("b7") -> new Pawn(2, Color.Black, Tile("b7")),
-      Tile("c7") -> new Pawn(3, Color.Black, Tile("c7")),
-      Tile("d7") -> new Pawn(4, Color.Black, Tile("d7")),
-      Tile("e7") -> new Pawn(5, Color.Black, Tile("e7")),
-      Tile("f7") -> new Pawn(6, Color.Black, Tile("f7")),
-      Tile("g7") -> new Pawn(7, Color.Black, Tile("g7")),
-      Tile("h7") -> new Pawn(8, Color.Black, Tile("h7")),
+      Tile("a8") ->  Rook(1, Color.Black, Tile("a8")),
+      Tile("b8") ->  Knight(1, Color.Black, Tile("b8")),
+      Tile("c8") ->  Bishop(1, Color.Black, Tile("c8")),
+      Tile("d8") ->  Queen( Color.Black, Tile("d8")),
+      Tile("e8") ->  King( Color.Black, Tile("e8")),
+      Tile("f8") ->  Bishop(2, Color.Black, Tile("f8")),
+      Tile("g8") ->  Knight(2, Color.Black, Tile("g8")),
+      Tile("h8") ->  Rook(2, Color.Black, Tile("h8")),
+      Tile("a7") ->  Pawn(1, Color.Black, Tile("a7")),
+      Tile("b7") ->  Pawn(2, Color.Black, Tile("b7")),
+      Tile("c7") ->  Pawn(3, Color.Black, Tile("c7")),
+      Tile("d7") ->  Pawn(4, Color.Black, Tile("d7")),
+      Tile("e7") ->  Pawn(5, Color.Black, Tile("e7")),
+      Tile("f7") ->  Pawn(6, Color.Black, Tile("f7")),
+      Tile("g7") ->  Pawn(7, Color.Black, Tile("g7")),
+      Tile("h7") ->  Pawn(8, Color.Black, Tile("h7")),
     )
 
     def getInitState:State = new State(tiles)
@@ -208,6 +204,8 @@ object Board {
 
       if (newX > 0 && newX <= 8 && newY > 0 && newY <= 8) Some(new Tile(newX, newY)) else None
     }
+
+    override def toString: String = id
   }
 
   def apply(state: State):Option[Board] = {
