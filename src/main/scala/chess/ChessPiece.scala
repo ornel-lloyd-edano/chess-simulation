@@ -19,7 +19,7 @@ abstract class ChessPiece(val `type`: ChessPiece.ChessPieceType, val color: Ches
 
   /**
    * isBlocked method checks if the current chess piece can reach the given tile
-   * @param validDestination is a tile that should come pre-validated from getMoves
+   * @param validDestination is a tile that should come pre-validated from getAllMoves
    * @param boardState is the current state of the chess board, which pieces are still alive and located on which tiles
    * @return true of the destination tile is blocked and unreachable else false
    */
@@ -27,7 +27,7 @@ abstract class ChessPiece(val `type`: ChessPiece.ChessPieceType, val color: Ches
 
   /**
    * clone method is used because ChessPiece is an abstract class which aims to be immutable in concrete implementation
-   * A case class with built in copy method could have been used but extending ca case class is a bad idea
+   * A case class with built in copy method could have been used but extending a case class is a bad idea
    * @param tile the new tile location of the new chess piece clone
    * @return a new chess piece with the same properties as the old one except a new tile location
    */
