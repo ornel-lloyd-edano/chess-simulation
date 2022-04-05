@@ -41,9 +41,24 @@ object Board {
       src.foreach { case (tile, chessPiece)=> mutableState.put(tile, chessPiece) }
     }
 
+    /**
+     * Gets all the tiles occupied by all uncaptured chess pieces
+     * @return a table of Tile locations and the corresponding chess piece on top of it
+     */
     def tiles: Map[Tile, ChessPiece] = mutableState.toMap
+
+    /**
+     * Gets all the chess pieces currently occupying the tiles
+     * @return a table of Chess pieces and the corresponding tile locations each occupy
+     */
     def chessPieces: Map[ChessPiece, Tile] = mutableState.map(_.swap).toMap
 
+    /**
+     * Sets a chess piece to a desired location, regardless if it is a valid move or not, while updating the board state
+     * @param chessPiece indicated by the id, type, color and current tile location
+     * @param destination the new tile location to put the chosen chess piece
+     * @return a copy of the chess piece with updated current tile location if success else an exception
+     */
     def set(chessPiece: ChessPiece, destination: Tile): Try[ChessPiece] = {
       chessPieces.get(chessPiece).map { tileToRemove=>
         val relocatedChessPiece = chessPiece.clone(destination)
@@ -53,6 +68,10 @@ object Board {
       }.getOrElse(Failure(new Exception(s"$chessPiece not found")))
     }
 
+    /**
+     * Checks if the chess pieces in the game are in the correct count based on color and type
+     * @return the state itself if valid or a list of exceptions if invalid state
+     */
     def validate: Either[Seq[Exception], State] = {
       def notMoreThanN(nCount: Int, chessPieceType: ChessPiece.ChessPieceType, color: ChessPiece.Color): Boolean = {
         tiles.count {
