@@ -37,7 +37,7 @@ class Board(state: State) {
 }
 
 object Board {
-  class State(val state: Map[Tile, ChessPiece] ) {
+  class State(val state: Map[Tile, ChessPiece]) extends ReadableBoardState {
 
     private val mutableState = mutable.Map[Tile, ChessPiece]()
     initState(state)
@@ -51,13 +51,13 @@ object Board {
      * Gets all the tiles occupied by all uncaptured chess pieces
      * @return a table of Tile locations and the corresponding chess piece on top of it
      */
-    def tiles: Map[Tile, ChessPiece] = mutableState.toMap
+    override def tiles: Map[Tile, ChessPiece] = mutableState.toMap
 
     /**
      * Gets all the chess pieces currently occupying the tiles
      * @return a table of Chess pieces and the corresponding tile locations each occupy
      */
-    def chessPieces: Map[ChessPiece, Tile] = mutableState.map(_.swap).toMap
+    override def chessPieces: Map[ChessPiece, Tile] = mutableState.map(_.swap).toMap
 
     /**
      * Sets a chess piece to a desired location, regardless if it is a valid move or not, while updating the board state
