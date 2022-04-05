@@ -1,8 +1,7 @@
-package chess.pieces
+package chess.domain.pieces
 
-import chess.Board.{State, Tile}
-import chess.ChessPiece
-import chess.ChessPiece.{ChessPieceType, Color}
+import chess.domain.Board.{State, Tile}
+import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
 
 case class Knight(id: Int, override val color: Color, override val tile: Tile) extends ChessPiece(ChessPieceType.Knight, color, tile) {
 

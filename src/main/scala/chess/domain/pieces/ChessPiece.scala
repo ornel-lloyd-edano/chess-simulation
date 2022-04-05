@@ -1,6 +1,7 @@
-package chess
+package chess.domain.pieces
 
-import chess.Board.Tile
+import chess.domain.Board
+import chess.domain.Board.Tile
 
 abstract class ChessPiece(val `type`: ChessPiece.ChessPieceType, val color: ChessPiece.Color, val tile: Tile) {
   /**

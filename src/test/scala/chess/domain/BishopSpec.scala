@@ -1,8 +1,8 @@
-package chess
+package chess.domain
 
-import chess.Board.{State, Tile}
-import chess.ChessPiece.Color
-import chess.pieces.{Bishop, Pawn}
+import chess.domain.Board.{State, Tile}
+import chess.domain.pieces.ChessPiece.Color
+import chess.domain.pieces.{Bishop, Pawn}
 import org.scalatest.GivenWhenThen
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec

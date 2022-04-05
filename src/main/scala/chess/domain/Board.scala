@@ -1,11 +1,11 @@
-package chess
+package chess.domain
+
+import chess.domain.Board._
+import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
+import chess.domain.pieces._
 
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
-import Board._
-
-import chess.ChessPiece.{ChessPieceType, Color}
-import chess.pieces.{Bishop, King, Knight, Pawn, Queen, Rook}
 
 class Board(state: State) {
 

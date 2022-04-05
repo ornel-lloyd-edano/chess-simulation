@@ -1,8 +1,7 @@
-package chess.pieces
+package chess.domain.pieces
 
-import chess.Board.{State, Tile}
-import chess.ChessPiece.{ChessPieceType, Color}
-import chess.ChessPiece
+import chess.domain.Board.{State, Tile}
+import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
 
 case class Pawn(id: Int, override val color: Color, override val tile: Tile, hasMoved: Boolean = false) extends ChessPiece(ChessPieceType.Pawn, color, tile) {
   override def getCapturingMoves(implicit boardState: State): Seq[Tile] = {

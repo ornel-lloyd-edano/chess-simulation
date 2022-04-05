@@ -1,8 +1,7 @@
-package chess.pieces
+package chess.domain.pieces
 
-import chess.Board.{State, Tile}
-import chess.ChessPiece
-import chess.ChessPiece.{ChessPieceType, Color}
+import chess.domain.Board.{State, Tile}
+import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
 
 case class Queen(override val color: Color, override val tile: Tile) extends ChessPiece(ChessPieceType.Queen, color, tile) {
   private val rook = Rook(-1, color, tile)

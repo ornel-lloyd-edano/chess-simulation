@@ -1,8 +1,7 @@
-package chess.pieces
+package chess.domain.pieces
 
-import chess.Board.{State, Tile}
-import chess.ChessPiece.{ChessPieceType, Color}
-import chess.ChessPiece
+import chess.domain.Board.{State, Tile}
+import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
 
 case class King(override val color: Color, override val tile: Tile) extends ChessPiece(ChessPieceType.King, color, tile) {
   private[pieces] val oneTileMoves = Seq(
