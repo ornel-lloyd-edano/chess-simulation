@@ -9,7 +9,7 @@ import util.Converters.ArrayIntExtension
 import scala.util.{Failure, Success, Try}
 
 object MainGame extends App {
-  val file = "src/main/resources/data/sample-moves.txt"
+  val file = "src/main/resources/data/sample-moves.txt" //sample-moves-invalid.txt   //checkmate.txt
   Try(new UserInputFile(file)) match {
     case Success(userInputFile)=>
       var turns: Seq[Turn] = Nil
@@ -21,6 +21,7 @@ object MainGame extends App {
             input = userInputFile.nextMove()
           case Failure(exception)=>
             println(s"A line of user input from the file is unreadable. Reason: [${exception.getMessage}]")
+            System.exit(0)
         }
       }
       val state = State.getInitState
