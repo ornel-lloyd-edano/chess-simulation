@@ -2,7 +2,7 @@ package chess
 
 import chess.Board.{State, Tile}
 import chess.ChessPiece.Color
-import chess.pieces.{Bishop, Pawn, Rook}
+import chess.pieces.{Bishop, Pawn}
 import org.scalatest.GivenWhenThen
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -149,7 +149,7 @@ class BishopSpec extends AnyWordSpec with Matchers with GivenWhenThen {
       When("black bishop from tile e6 moves vertically to tile c4")
       val blackBishop = board.flatMap(_.get(Tile("e6")))
       blackBishop mustBe Some(Bishop(1, Color.Black, Tile("e6")))
-      val blackBishopInC4 = blackBishop.flatMap(bishop=> board.flatMap(_.set(bishop, Tile("c4")).toOption))
+      blackBishop.flatMap(bishop=> board.flatMap(_.set(bishop, Tile("c4")).toOption))
 
       Then("white pawn in c4 is captured by black bishop")
       board.flatMap(_.get(Pawn(3, Color.White, Tile("c4"), true))) mustBe None

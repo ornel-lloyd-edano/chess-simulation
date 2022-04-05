@@ -3,7 +3,8 @@ package chess
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 import Board._
-import chess.ChessPiece.Color
+
+import chess.ChessPiece.{ChessPieceType, Color}
 import chess.pieces.{Bishop, King, Knight, Pawn, Queen, Rook}
 
 class Board(state: State) {
@@ -20,11 +21,16 @@ class Board(state: State) {
     chessPiece.getAllMoves(state).find(_ == destination) match {
       case None=>
         Failure(new Exception(s"Tile $destination is illegal move for $chessPiece"))
-      case Some(tile)=>
-        if (!chessPiece.isBlocked(tile)(state)) {
-          state.set(chessPiece, tile)
+      case Some(validDestTile)=>
+        if (!chessPiece.isBlocked(validDestTile)(state)) {
+          state.set(chessPiece, validDestTile)
         } else {
-          Failure(new Exception(s"Tile $destination is blocked and unreachable for $chessPiece"))
+          val message = if (chessPiece.`type` == ChessPieceType.King) {
+            s"Tile $destination is check for $chessPiece"
+          } else {
+            s"Tile $destination is blocked and unreachable for $chessPiece"
+          }
+          Failure(new Exception(message))
         }
     }
   }
@@ -66,6 +72,21 @@ object Board {
         initState(newState)
         Success(relocatedChessPiece)
       }.getOrElse(Failure(new Exception(s"$chessPiece not found")))
+    }
+
+    /**
+     * Clears a tile from chess piece occupancy, a.k.a. removes a chess piece from the board
+     * @param tile any tile from the chess board from a1 to h8
+     * @return nothing if successfully removed or was already removed, exception if attempting to remove a King
+     */
+    def removeAt(tile: Tile): Try[Unit] = {
+      tiles.get(tile) match {
+        case Some(King(_, _))=>
+          Failure(new Exception(s"Invalid state: King at tile $tile cannot be removed"))
+        case _=>
+          initState(tiles - tile)
+          Success(())
+      }
     }
 
     /**
@@ -134,8 +155,8 @@ object Board {
       Tile("a1") -> new Rook(1, Color.White, Tile("a1")),
       Tile("b1") -> new Knight(1, Color.White, Tile("b1")),
       Tile("c1") -> new Bishop(1, Color.White, Tile("c1")),
-      Tile("d1") -> new King( Color.White, Tile("d1")),
-      Tile("e1") -> new Queen( Color.White, Tile("e1")),
+      Tile("d1") -> new Queen( Color.White, Tile("d1")),
+      Tile("e1") -> new King( Color.White, Tile("e1")),
       Tile("f1") -> new Bishop(2, Color.White, Tile("f1")),
       Tile("g1") -> new Knight(2, Color.White, Tile("g1")),
       Tile("h1") -> new Rook(2, Color.White, Tile("h1")),
@@ -151,8 +172,8 @@ object Board {
       Tile("a8") -> new Rook(1, Color.Black, Tile("a8")),
       Tile("b8") -> new Knight(1, Color.Black, Tile("b8")),
       Tile("c8") -> new Bishop(1, Color.Black, Tile("c8")),
-      Tile("d8") -> new King( Color.Black, Tile("d8")),
-      Tile("e8") -> new Queen( Color.Black, Tile("e8")),
+      Tile("d8") -> new Queen( Color.Black, Tile("d8")),
+      Tile("e8") -> new King( Color.Black, Tile("e8")),
       Tile("f8") -> new Bishop(2, Color.Black, Tile("f8")),
       Tile("g8") -> new Knight(2, Color.Black, Tile("g8")),
       Tile("h8") -> new Rook(2, Color.Black, Tile("h8")),

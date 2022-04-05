@@ -12,7 +12,7 @@ class QueenSpec extends AnyWordSpec with Matchers with GivenWhenThen {
     "be able to move diagonally" in {
       Given("default initial arrangement except black queen from tile e8 is now at tile e5")
       val initState = State.getInitState
-      initState.set(Queen(Color.Black, Tile("e8")), Tile("e5")).isSuccess mustBe true
+      initState.set(Queen(Color.Black, Tile("d8")), Tile("e5")).isSuccess mustBe true
       val board = Board(initState)
       board.isDefined mustBe true
 
@@ -51,7 +51,7 @@ class QueenSpec extends AnyWordSpec with Matchers with GivenWhenThen {
     "be able to move horizontally" in {
       Given("default initial arrangement except black queen from tile e8 is now at tile c4")
       val initState = State.getInitState
-      initState.set(Queen(Color.Black, Tile("e8")), Tile("c4")).isSuccess mustBe true
+      initState.set(Queen(Color.Black, Tile("d8")), Tile("c4")).isSuccess mustBe true
       val board = Board(initState)
       board.isDefined mustBe true
 
@@ -82,7 +82,7 @@ class QueenSpec extends AnyWordSpec with Matchers with GivenWhenThen {
     "be able to move vertically" in {
       Given("default initial arrangement except black queen from tile a8 is now at tile c6")
       val initState = State.getInitState
-      initState.set(Queen(Color.Black, Tile("e8")), Tile("c6")).isSuccess mustBe true
+      initState.set(Queen(Color.Black, Tile("d8")), Tile("c6")).isSuccess mustBe true
       val board = Board(initState)
       board.isDefined mustBe true
 
@@ -113,7 +113,7 @@ class QueenSpec extends AnyWordSpec with Matchers with GivenWhenThen {
     "not be able to go to destination tile if enemy or friendly is blocking" in {
       Given("black queen from tile a8 is now at tile b4, white pawn from d2 is at d5")
       val initState = State.getInitState
-      initState.set(Queen(Color.Black, Tile("e8")), Tile("b5")).isSuccess mustBe true
+      initState.set(Queen(Color.Black, Tile("d8")), Tile("b5")).isSuccess mustBe true
       initState.set(Pawn(2, Color.White, Tile("b2")), Tile("b4")).isSuccess mustBe true
       initState.set(Pawn(4, Color.Black, Tile("d7")), Tile("d5")).isSuccess mustBe true
       val board = Board(initState)
@@ -143,7 +143,7 @@ class QueenSpec extends AnyWordSpec with Matchers with GivenWhenThen {
     "able to capture enemy located on tiles along diagonal movement" in {
       Given("black queen at tile e6, white pawn at tile c4")
       val initState = State.getInitState
-      initState.set(Queen(Color.Black, Tile("e8")), Tile("e6")).isSuccess mustBe true
+      initState.set(Queen(Color.Black, Tile("d8")), Tile("e6")).isSuccess mustBe true
       initState.set(Pawn(3, Color.White, Tile("c2")), Tile("c4")).isSuccess mustBe true
       val board = Board(initState)
       board.isDefined mustBe true
@@ -161,7 +161,7 @@ class QueenSpec extends AnyWordSpec with Matchers with GivenWhenThen {
     "not able to capture friendlies" in {
       Given("black queen at tile e6, white pawn at tile c4")
       val initState = State.getInitState
-      initState.set(Queen(Color.Black, Tile("e8")), Tile("e6")).isSuccess mustBe true
+      initState.set(Queen(Color.Black, Tile("d8")), Tile("e6")).isSuccess mustBe true
       initState.set(Pawn(3, Color.Black, Tile("c7")), Tile("c4")).isSuccess mustBe true
       val board = Board(initState)
       board.isDefined mustBe true
