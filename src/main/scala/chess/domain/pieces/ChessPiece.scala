@@ -1,6 +1,6 @@
 package chess.domain.pieces
 
-import chess.domain.Board
+import chess.domain.MutableBoardState
 import chess.domain.Board.Tile
 
 abstract class ChessPiece(val `type`: ChessPiece.ChessPieceType, val color: ChessPiece.Color, val tile: Tile) {
@@ -9,14 +9,14 @@ abstract class ChessPiece(val `type`: ChessPiece.ChessPieceType, val color: Ches
    * @param boardState is the current state of the chess board, which pieces are still alive and located on which tiles
    * @return
    */
-  def getCapturingMoves(implicit boardState: Board.State): Seq[Tile]
+  def getCapturingMoves(implicit boardState: MutableBoardState): Seq[Tile]
 
   /**
    * getAllMoves method gets all tiles available to this chess piece for both capturing or just moving normally
    * @param boardState is the current state of the chess board, which pieces are still alive and located on which tiles
    * @return a list of tiles where this chess piece can legally move according to its type, color and current location
    */
-  def getAllMoves(implicit boardState: Board.State): Seq[Tile]
+  def getAllMoves(implicit boardState: MutableBoardState): Seq[Tile]
 
   /**
    * isBlocked method checks if the current chess piece can reach the given tile
@@ -24,7 +24,7 @@ abstract class ChessPiece(val `type`: ChessPiece.ChessPieceType, val color: Ches
    * @param boardState is the current state of the chess board, which pieces are still alive and located on which tiles
    * @return true of the destination tile is blocked and unreachable else false
    */
-  def isBlocked(validDestination: Tile)(implicit boardState: Board.State): Boolean
+  def isBlocked(validDestination: Tile)(implicit boardState: MutableBoardState): Boolean
 
   /**
    * clone method is used because ChessPiece is an abstract class which aims to be immutable in concrete implementation

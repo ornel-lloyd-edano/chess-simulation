@@ -1,6 +1,7 @@
 package chess.domain.pieces
 
-import chess.domain.Board.{State, Tile}
+import chess.domain.Board.Tile
+import chess.domain.MutableBoardState
 import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
 
 case class Rook(id: Int, override val color: Color, override val tile: Tile) extends ChessPiece(ChessPieceType.Rook, color, tile) {
@@ -46,16 +47,16 @@ case class Rook(id: Int, override val color: Color, override val tile: Tile) ext
     tile.move(0, -8)
   )
 
-  override def getCapturingMoves(implicit boardState: State): Seq[Tile] = {
+  override def getCapturingMoves(implicit boardState: MutableBoardState): Seq[Tile] = {
     (rightMoves ++ leftMoves ++ upMoves ++ downMoves).flatten.filterNot(isBlocked)
   }
-  override def getAllMoves(implicit boardState: State): Seq[Tile] = {
+  override def getAllMoves(implicit boardState: MutableBoardState): Seq[Tile] = {
     getCapturingMoves(boardState).filterNot(tile=> boardState.tiles.find {
       case (occupiedTile, chessPiece)=>
         tile == occupiedTile && chessPiece.color == this.color
     }.isDefined)
   }
-  override def isBlocked(validDestination: Tile)(implicit boardState: State): Boolean = {
+  override def isBlocked(validDestination: Tile)(implicit boardState: MutableBoardState): Boolean = {
     val currentTileToDest = if (tile.getY == validDestination.getY && tile.getX < validDestination.getX) { //check horizontal-right direction
       rightMoves.flatten.filter(_.getX < validDestination.getX)
     } else if (tile.getY == validDestination.getY && tile.getX > validDestination.getX) { //check horizontal-left direction

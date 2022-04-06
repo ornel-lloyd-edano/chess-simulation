@@ -1,6 +1,7 @@
 package chess.domain.pieces
 
-import chess.domain.Board.{State, Tile}
+import chess.domain.Board.Tile
+import chess.domain.MutableBoardState
 import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
 
 case class King(override val color: Color, override val tile: Tile) extends ChessPiece(ChessPieceType.King, color, tile) {
@@ -15,11 +16,11 @@ case class King(override val color: Color, override val tile: Tile) extends Ches
     tile.move(-1, -1)
   )
 
-  override def getCapturingMoves(implicit boardState: State): Seq[Tile] = {
+  override def getCapturingMoves(implicit boardState: MutableBoardState): Seq[Tile] = {
     oneTileMoves.flatten.filterNot(isBlocked)
   }
 
-  override def getAllMoves(implicit boardState: State): Seq[Tile] = {
+  override def getAllMoves(implicit boardState: MutableBoardState): Seq[Tile] = {
     getCapturingMoves(boardState).filterNot(tile=> boardState.tiles.find {
       case (occupiedTile, chessPiece)=>
         tile == occupiedTile && chessPiece.color == this.color
@@ -28,7 +29,7 @@ case class King(override val color: Color, override val tile: Tile) extends Ches
 
   //find out if the given validDestination tile from my getCapturingMoves is not among the getCapturingMoves
   //of the enemy chess pieces because if it is then the resulting move will be a check and should be blocked
-  override def isBlocked(validDestination: Tile)(implicit boardState: State): Boolean = {
+  override def isBlocked(validDestination: Tile)(implicit boardState: MutableBoardState): Boolean = {
     boardState.chessPieces.map(_._1).filterNot(_.color == this.color)
       .flatMap {
         case enemyKing: King => //we are doing this to avoid stack overflow since calling getCapturingMoves on King calls isBlocked vice versa

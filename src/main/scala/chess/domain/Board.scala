@@ -3,11 +3,13 @@ package chess.domain
 import chess.domain.Board._
 import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
 import chess.domain.pieces._
+import chess.util.{ObservableState, StateObserver}
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 import scala.util.{Failure, Success, Try}
 
-class Board(state: State) {
+class Board(state: MutableBoardState) {
 
   def get(tile: Tile):Option[ChessPiece] = state.tiles.get(tile)
 
@@ -33,7 +35,11 @@ class Board(state: State) {
 }
 
 object Board {
-  class State(val state: Map[Tile, ChessPiece]) extends ReadableBoardState {
+  class State(val state: Map[Tile, ChessPiece]) extends MutableBoardState with ObservableState[Map[Tile, ChessPiece]] {
+
+    protected val observers: ListBuffer[StateObserver[Map[Tile, ChessPiece]]] =
+      ListBuffer[StateObserver[Map[Tile, ChessPiece]]]()
+    override def notifyObservers(arg: Map[Tile, ChessPiece]): Unit = observers.foreach(_.update(arg))
 
     private val mutableState = mutable.Map[Tile, ChessPiece]()
     initState(state)
@@ -41,6 +47,7 @@ object Board {
     private def initState(src: Map[Tile, ChessPiece]): Unit = {
       mutableState.clear()
       src.foreach { case (tile, chessPiece)=> mutableState.put(tile, chessPiece) }
+      notifyObservers(mutableState.toMap)
     }
 
     /**
@@ -61,7 +68,7 @@ object Board {
      * @param destination the new tile location to put the chosen chess piece
      * @return a copy of the chess piece with updated current tile location if success else an exception
      */
-    def set(chessPiece: ChessPiece, destination: Tile): Try[ChessPiece] = {
+    override def set(chessPiece: ChessPiece, destination: Tile): Try[ChessPiece] = {
       chessPieces.get(chessPiece).map { tileToRemove=>
         val relocatedChessPiece = chessPiece.clone(destination)
         val newState = (tiles - tileToRemove) + (destination -> relocatedChessPiece)
@@ -75,7 +82,7 @@ object Board {
      * @param tile any tile from the chess board from a1 to h8
      * @return nothing if successfully removed or was already removed, exception if attempting to remove a King
      */
-    def removeAt(tile: Tile): Try[Unit] = {
+    override def removeAt(tile: Tile): Try[Unit] = {
       tiles.get(tile) match {
         case Some(King(_, _))=>
           Failure(new Exception(s"Invalid state: King at tile $tile cannot be removed"))
@@ -89,7 +96,7 @@ object Board {
      * Checks if the chess pieces in the game are in the correct count based on color and type
      * @return the state itself if valid or a list of exceptions if invalid state
      */
-    def validate: Either[Seq[Exception], State] = {
+    override def validate: Either[Seq[Exception], State] = {
       def notMoreThanN(nCount: Int, chessPieceType: ChessPiece.ChessPieceType, color: ChessPiece.Color): Boolean = {
         tiles.count {
           case (_, chessPiece)=> chessPiece.`type` == chessPieceType && chessPiece.color == color

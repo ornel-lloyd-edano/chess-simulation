@@ -1,7 +1,7 @@
 package chess.domain.pieces
 
-import chess.domain.Board
-import chess.domain.Board.{State, Tile}
+import chess.domain.MutableBoardState
+import chess.domain.Board.Tile
 import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
 
 case class Bishop(id: Int, override val color: Color, override val tile: Tile) extends ChessPiece(ChessPieceType.Bishop, color, tile) {
@@ -46,18 +46,18 @@ case class Bishop(id: Int, override val color: Color, override val tile: Tile) e
     tile.move(-8, 8)
   )
 
-  override def getCapturingMoves(implicit boardState: Board.State): Seq[Tile] = {
+  override def getCapturingMoves(implicit boardState: MutableBoardState): Seq[Tile] = {
     (moves45Deg ++ moves135Deg ++ moves225Deg ++ moves315Deg).flatten.filterNot(isBlocked)
   }
 
-  override def getAllMoves(implicit boardState: State): Seq[Tile] = {
+  override def getAllMoves(implicit boardState: MutableBoardState): Seq[Tile] = {
     getCapturingMoves(boardState).filterNot(tile=> boardState.tiles.find {
       case (occupiedTile, chessPiece)=>
         tile == occupiedTile && chessPiece.color == this.color
     }.isDefined)
   }
 
-  override def isBlocked(validDestination: Tile)(implicit boardState: Board.State): Boolean = {
+  override def isBlocked(validDestination: Tile)(implicit boardState: MutableBoardState): Boolean = {
     val currentTileToDest =
       if (tile.getX < validDestination.getX && tile.getY < validDestination.getY) {
         moves45Deg.flatten.filter(tile=> tile.getX < validDestination.getX && tile.getY < validDestination.getY)

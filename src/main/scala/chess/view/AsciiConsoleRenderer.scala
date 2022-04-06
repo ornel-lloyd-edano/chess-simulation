@@ -1,9 +1,11 @@
 package chess.view
 
-import chess.domain.ReadableBoardState
+import chess.domain.Board.Tile
+import chess.domain.pieces.ChessPiece
 import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
+import chess.util.StateObserver
 
-class AsciiConsoleRender(state: ReadableBoardState) extends BoardStateRenderer {
+class AsciiConsoleRenderer extends BoardStateRenderer with StateObserver[Map[Tile, ChessPiece]] {
   private val `isWhite` = true
   private val `isBlack` = false
   private val `isKnight` = false
@@ -30,8 +32,12 @@ class AsciiConsoleRender(state: ReadableBoardState) extends BoardStateRenderer {
        | a1| b1| c1| d1| e1| f1| g1| h1|
        |*******************************|""".stripIndent().stripLineEnd
 
-  def toAscii(): String = {
-    val labels = state.tiles.map {
+  override def update(state: Map[Tile, ChessPiece]): Unit = {
+    renderBoard(state)
+  }
+
+  def toAscii(tiles: Map[Tile, ChessPiece]): String = {//for testability purpose
+    val labels = tiles.map {
       case (tile, chessPiece)=>
         val chessPieceSymbol = (chessPiece.color == Color.White, chessPiece.`type` != ChessPieceType.Knight) match {
           case (`isWhite`, `notKnight`)  =>
@@ -51,9 +57,9 @@ class AsciiConsoleRender(state: ReadableBoardState) extends BoardStateRenderer {
     }
   }
 
-  override def renderBoard(): Unit = {
+  override def renderBoard(boardState: Map[Tile, ChessPiece]): Unit = {
     println(System.lineSeparator())
-    println(toAscii())
+    println(toAscii(boardState))
     println(System.lineSeparator())
   }
 }

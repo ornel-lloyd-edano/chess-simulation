@@ -2,7 +2,7 @@ package chess
 
 import chess.domain.{Board, Turn}
 import chess.domain.Board.{State}
-import chess.view.AsciiConsoleRender
+import chess.view.AsciiConsoleRenderer
 import com.whitehatgaming.UserInputFile
 import util.Converters.ArrayIntExtension
 
@@ -24,17 +24,19 @@ object MainGame extends App {
             System.exit(0)
         }
       }
+
       val state = State.getInitState
+      val renderer = new AsciiConsoleRenderer
+      state.register(renderer)
+
       Board(state) match {
         case Some(board)=>
-          val renderer = new AsciiConsoleRender(state)
           turns.foreach {
             case Turn(src, dest)=>
               board.get(src).map { chessPiece =>
                 board.set(chessPiece, dest)
               } match {
                 case Some(Success(chessPiece))=>
-                  renderer.renderBoard()
                   println(s"$chessPiece was moved from $src to $dest")
                 case Some(Failure(exception))=>
                   println(s"Fail to move chess piece on tile $dest. Reason: [${exception.getMessage}]")

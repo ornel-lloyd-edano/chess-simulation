@@ -1,10 +1,11 @@
 package chess.domain.pieces
 
-import chess.domain.Board.{State, Tile}
+import chess.domain.Board.Tile
+import chess.domain.MutableBoardState
 import chess.domain.pieces.ChessPiece.{ChessPieceType, Color}
 
 case class Pawn(id: Int, override val color: Color, override val tile: Tile, hasMoved: Boolean = false) extends ChessPiece(ChessPieceType.Pawn, color, tile) {
-  override def getCapturingMoves(implicit boardState: State): Seq[Tile] = {
+  override def getCapturingMoves(implicit boardState: MutableBoardState): Seq[Tile] = {
     (if (color == Color.White) {
       Seq(
         tile.move(1, 1),
@@ -20,7 +21,7 @@ case class Pawn(id: Int, override val color: Color, override val tile: Tile, has
     }.isDefined)
   }
 
-  override def isBlocked(validDestination: Tile)(implicit boardState: State): Boolean = {
+  override def isBlocked(validDestination: Tile)(implicit boardState: MutableBoardState): Boolean = {
     if (tile.getX == validDestination.getX) {
       boardState.chessPieces.find {
         case (chessPiece, tile)=>
@@ -35,7 +36,7 @@ case class Pawn(id: Int, override val color: Color, override val tile: Tile, has
     }
   }
 
-  override def getAllMoves(implicit boardState: State): Seq[Tile] = {
+  override def getAllMoves(implicit boardState: MutableBoardState): Seq[Tile] = {
     val nonCaptureMoves = (if (!hasMoved) {
       if (color == Color.White) {
         Seq(tile.move(0, 1), tile.move(0, 2))
